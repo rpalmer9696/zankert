@@ -1,12 +1,18 @@
+import Link from "next/link";
+
 type Props = {
   name: string;
+  board_id: string;
 };
 
-const BoardCard = ({ name }: Props) => {
+const BoardCard = ({ name, board_id }: Props) => {
   return (
-    <div className="cursor-pointer rounded bg-white/20 pt-6 pb-10 text-center text-2xl text-white hover:bg-white/40">
+    <Link
+      className="cursor-pointer rounded bg-white/20 pt-6 pb-10 text-center text-2xl text-white hover:bg-white/40"
+      href={`/board/${board_id}`}
+    >
       {name}
-    </div>
+    </Link>
   );
 };
 

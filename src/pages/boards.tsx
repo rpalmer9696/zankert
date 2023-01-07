@@ -33,7 +33,7 @@ const Boards: NextPage = () => {
       <Header />
       <div className="grid auto-rows-fr grid-cols-1 gap-8 sm:grid-cols-3 lg:grid-cols-5">
         {boards.map((item, id) => {
-          return <BoardCard key={id} name={item.name} />;
+          return <BoardCard key={id} name={item.name} board_id={item.id} />;
         })}
         <button
           className="cursor-pointer rounded bg-white/20 py-16 text-2xl text-white hover:bg-white/40"
