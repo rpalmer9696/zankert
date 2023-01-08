@@ -8,24 +8,17 @@ import { api } from "../utils/api";
 const Home: NextPage = () => {
   return (
     <>
-      <Head>
-        <title>Zankert</title>
-        <meta name="description" content="Zankert" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-rose-800 to-pink-300">
-        <div className="container flex flex-col items-center justify-center gap-6 px-4 py-16 ">
-          <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
-            Zankert
-          </h1>
-          <div className="flex flex-col items-center gap-2">
-            <p className="text-2xl text-white">
-              Get ready to organise your life!
-            </p>
-            <AuthShowcase />
-          </div>
+      <div className="container flex flex-col items-center justify-center gap-6 px-4 py-16 ">
+        <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
+          Zankert
+        </h1>
+        <div className="flex flex-col items-center gap-2">
+          <p className="text-2xl text-white">
+            Get ready to organise your life!
+          </p>
+          <AuthShowcase />
         </div>
-      </main>
+      </div>
     </>
   );
 };
