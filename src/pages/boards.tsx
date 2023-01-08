@@ -29,9 +29,9 @@ const Boards: NextPage = () => {
   const addBoard = api.board.addBoard.useMutation();
 
   return (
-    <div className="flex min-h-screen flex-col gap-16 bg-gradient-to-b from-rose-800 to-pink-300 p-4">
+    <div className="flex flex-col gap-16 p-4">
       <Header />
-      <div className="grid auto-rows-fr grid-cols-1 gap-8 sm:grid-cols-3 lg:grid-cols-5">
+      <div className="grid auto-rows-fr grid-cols-boards gap-8">
         {boards.map((item, id) => {
           return <BoardCard key={id} name={item.name} board_id={item.id} />;
         })}
