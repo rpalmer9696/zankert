@@ -29,4 +29,19 @@ export const listRouter = createTRPCRouter({
         },
       });
     }),
+  updateList: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        name: z.string(),
+      })
+    )
+    .mutation(({ input }) => {
+      return prisma.list.update({
+        where: { id: input.id },
+        data: {
+          name: input.name,
+        },
+      });
+    }),
 });

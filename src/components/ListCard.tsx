@@ -16,9 +16,11 @@ type Task = {
 const ListCard = ({ name, id }: Props) => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [isAddTaskModelOpen, setIsAddTaskModelOpen] = useState(false);
+  const [listName, setListName] = useState(name);
   const [newTaskName, setNewTaskName] = useState("");
   const [newTaskDescription, setNewTaskDescription] = useState("");
   const addTask = api.task.addTask.useMutation();
+  const updateList = api.list.updateList.useMutation();
 
   api.task.getTasks.useQuery(
     { list_id: id },
@@ -35,7 +37,19 @@ const ListCard = ({ name, id }: Props) => {
         key={id}
         className="mr-8 flex min-h-min min-w-[20rem] flex-col gap-4 rounded bg-white/20 p-4"
       >
-        <div className="text-center text-2xl text-white">{name}</div>
+        <input
+          className="text-ellipsis whitespace-nowrap bg-transparent p-2 text-2xl text-white hover:bg-white/30"
+          value={listName}
+          onChange={(e) => setListName(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.code !== "Enter") return;
+            (e.target as HTMLInputElement).blur();
+            updateList.mutate({
+              id: id as string,
+              name: listName,
+            });
+          }}
+        />
         <div className="flex max-h-96 flex-col gap-4 overflow-y-auto px-2">
           {tasks.map((item, id) => {
             return (
