@@ -5,6 +5,7 @@ import { api } from "@/utils/api";
 import Header from "@/components/Header";
 import { useState } from "react";
 import ListCard from "@/components/ListCard";
+import Link from "next/link";
 
 type List = {
   name: string;
@@ -27,7 +28,6 @@ const Board = () => {
     }
   );
   const addList = api.list.addList.useMutation();
-  const [isBoardNameEditing, setIsBoardNameEditing] = useState(false);
 
   const [lists, setLists] = useState<List[]>([]);
 
@@ -43,8 +43,16 @@ const Board = () => {
   );
 
   return (
-    <div className="flex flex-col gap-8 p-4">
+    <div className="flex flex-col p-4">
       <Header />
+      <div className="p-2"></div>
+      <Link
+        href="/boards"
+        className="w-min whitespace-nowrap rounded bg-white/20 p-2 text-xl text-white hover:bg-white/30"
+      >
+        {"< Back to Boards"}
+      </Link>
+      <div className="p-2"></div>
       <input
         className="w-full text-ellipsis whitespace-nowrap rounded bg-transparent p-2 text-3xl text-white hover:bg-white/30"
         value={boardName}
@@ -58,6 +66,7 @@ const Board = () => {
           });
         }}
       />
+      <div className="p-2"></div>
       <div className="flex flex-row overflow-x-auto pb-4">
         {lists.map((item, id) => {
           return <ListCard key={id} name={item.name} id={item.id} />;
