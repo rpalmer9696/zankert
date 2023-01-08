@@ -15,10 +15,23 @@ type List = {
 const Board = () => {
   const router = useRouter();
   const { id } = router.query;
-  const currentBoard = api.board.getBoard.useQuery({ id: id as string });
+  const [boardName, setBoardName] = useState("");
+  api.board.getBoard.useQuery(
+    { id: id as string },
+    {
+      onSuccess: (data) => {
+        if (data && data.name) {
+          setBoardName(data.name);
+        }
+      },
+    }
+  );
   const addList = api.list.addList.useMutation();
+  const [isBoardNameEditing, setIsBoardNameEditing] = useState(false);
 
   const [lists, setLists] = useState<List[]>([]);
+
+  const updateBoard = api.board.updateBoard.useMutation();
 
   api.list.getLists.useQuery(
     { board_id: id as string },
@@ -32,7 +45,19 @@ const Board = () => {
   return (
     <div className="flex flex-col gap-8 p-4">
       <Header />
-      <div className="text-3xl text-white">{currentBoard?.data?.name}</div>
+      <input
+        className="w-full text-ellipsis whitespace-nowrap rounded bg-transparent p-2 text-3xl text-white hover:bg-white/30"
+        value={boardName}
+        onChange={(e) => setBoardName(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.code !== "Enter") return;
+          (e.target as HTMLInputElement).blur();
+          updateBoard.mutate({
+            id: id as string,
+            name: boardName,
+          });
+        }}
+      />
       <div className="flex flex-row overflow-x-auto pb-4">
         {lists.map((item, id) => {
           return <ListCard key={id} name={item.name} id={item.id} />;

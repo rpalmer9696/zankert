@@ -59,4 +59,14 @@ export const boardRouter = createTRPCRouter({
     .query(({ input }) => {
       return prisma.board.findUnique({ where: { id: input.id } });
     }),
+  updateBoard: protectedProcedure
+    .input(z.object({ id: z.string(), name: z.string() }))
+    .mutation(({ input }) => {
+      return prisma.board.update({
+        where: { id: input.id },
+        data: {
+          name: input.name,
+        },
+      });
+    }),
 });
