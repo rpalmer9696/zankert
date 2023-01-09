@@ -8,7 +8,7 @@ import { api } from "../utils/api";
 const Home: NextPage = () => {
   return (
     <>
-      <div className="container flex flex-col items-center justify-center gap-6 px-4 py-16 ">
+      <div className="flex w-full flex-col items-center justify-center gap-6 px-4 py-16 ">
         <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
           Zankert
         </h1>
