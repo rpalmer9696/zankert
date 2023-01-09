@@ -3,7 +3,7 @@ import { getSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { api } from "@/utils/api";
 import Header from "@/components/Header";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ListCard from "@/components/ListCard";
 import Link from "next/link";
 
@@ -11,6 +11,13 @@ type List = {
   name: string;
   id: string;
   board_id: string;
+};
+
+type Task = {
+  name: string;
+  list_id: string;
+  id: string;
+  description: string | null;
 };
 
 const Board = () => {
@@ -30,6 +37,7 @@ const Board = () => {
   const addList = api.list.addList.useMutation();
 
   const [lists, setLists] = useState<List[]>([]);
+  const [updatedListId, setUpdatedListId] = useState("");
 
   const updateBoard = api.board.updateBoard.useMutation();
 
@@ -68,8 +76,19 @@ const Board = () => {
       />
       <div className="p-2"></div>
       <div className="flex flex-row overflow-x-auto pb-4">
-        {lists.map((item, id) => {
-          return <ListCard key={id} name={item.name} id={item.id} />;
+        {lists.map((item, index) => {
+          return (
+            <ListCard
+              key={index}
+              name={item.name}
+              id={item.id}
+              lists={lists}
+              updateListId={updatedListId}
+              refreshLists={(toList: string) => {
+                setUpdatedListId(toList);
+              }}
+            />
+          );
         })}
         <button
           className="h-24 min-w-[20rem] cursor-pointer rounded bg-white/20 py-8 text-2xl text-white hover:bg-white/40"
