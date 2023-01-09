@@ -32,8 +32,12 @@ type EditTaskModalProps = {
   list_id: string;
   lists: { name: string; id: string; board_id: string }[];
   refreshLists: (toList: string) => void;
-  getTasks: { data: Task[] | undefined };
+  getTasks: {
+    data: Task[] | undefined;
+    refetch: () => Promise<{ data: Task[] | undefined }>;
+  };
   setTasks: (value: Task[]) => void;
+  deleteTask: any;
 };
 
 const ListCard = ({ name, id, lists, refreshLists, updateListId }: Props) => {
@@ -43,6 +47,7 @@ const ListCard = ({ name, id, lists, refreshLists, updateListId }: Props) => {
   const [isEditTaskModalOpen, setIsEditTaskModalOpen] = useState(false);
   const [listName, setListName] = useState(name);
   const updateList = api.list.updateList.useMutation();
+  const deleteTask = api.task.deleteTask.useMutation();
 
   const getTasks = api.task.getTasks.useQuery(
     { list_id: id },
@@ -126,6 +131,7 @@ const ListCard = ({ name, id, lists, refreshLists, updateListId }: Props) => {
           refreshLists={refreshLists}
           getTasks={getTasks}
           setTasks={setTasks}
+          deleteTask={deleteTask}
         />
       ) : (
         ""
@@ -223,6 +229,7 @@ const EditTaskModal = ({
   refreshLists,
   getTasks,
   setTasks,
+  deleteTask,
 }: EditTaskModalProps) => {
   const [currentListId, setCurrentListId] = useState(list_id);
   const [currentTaskId, setCurrentTaskId] = useState(task?.id);
@@ -277,7 +284,7 @@ const EditTaskModal = ({
           </select>
         </div>
         <button
-          className="rounded bg-pink-300 py-2 text-white"
+          className="rounded bg-pink-300 py-2 text-white hover:bg-pink-300/80"
           onClick={() => {
             updateTask.mutate(
               {
@@ -301,13 +308,34 @@ const EditTaskModal = ({
           Update Task
         </button>
         <button
-          className="rounded bg-pink-300 py-2 text-white"
+          className="rounded bg-pink-300 py-2 text-white hover:bg-pink-300/80"
           onClick={() => {
             setIsEditTaskModalOpen(false);
             setCurrentTask(null);
           }}
         >
           Cancel
+        </button>
+        <div className="p-2"></div>
+        <hr></hr>
+        <div className="p-2"></div>
+        <button
+          className="bg-red-600 p-2 text-white hover:bg-red-600/80"
+          onClick={() => {
+            deleteTask.mutate(
+              { id: currentTaskId as string },
+              {
+                onSuccess: async () => {
+                  const updatedTasks = await getTasks.refetch();
+                  setTasks(updatedTasks.data as Task[]);
+                  setIsEditTaskModalOpen(false);
+                  setCurrentTask(null);
+                },
+              }
+            );
+          }}
+        >
+          Delete Task
         </button>
       </div>
     </div>
