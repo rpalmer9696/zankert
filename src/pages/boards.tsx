@@ -4,6 +4,7 @@ import Header from "../components/Header";
 import BoardCard from "../components/BoardCard";
 import { useState } from "react";
 import { api } from "@/utils/api";
+import Layout from "./layout";
 
 type Board = {
   name: string;
@@ -29,32 +30,34 @@ const Boards: NextPage = () => {
   const addBoard = api.board.addBoard.useMutation();
 
   return (
-    <div className="flex flex-col gap-16 p-4">
-      <Header />
-      <div className="grid auto-rows-fr grid-cols-boards gap-8">
-        {boards.map((item, id) => {
-          return <BoardCard key={id} name={item.name} board_id={item.id} />;
-        })}
-        <button
-          className="cursor-pointer rounded bg-white/20 py-16 text-2xl text-white hover:bg-white/40"
-          onClick={() => {
-            addBoard.mutate(
-              {
-                name: "New Board",
-                email: sessionData?.user?.email as string,
-              },
-              {
-                onSuccess: (data) => {
-                  setBoards([...boards, data]);
+    <Layout>
+      <div className="flex flex-col gap-16 p-4">
+        <Header />
+        <div className="grid auto-rows-fr grid-cols-boards gap-8">
+          {boards.map((item, id) => {
+            return <BoardCard key={id} name={item.name} board_id={item.id} />;
+          })}
+          <button
+            className="cursor-pointer rounded bg-white/20 py-16 text-2xl text-white hover:bg-white/40"
+            onClick={() => {
+              addBoard.mutate(
+                {
+                  name: "New Board",
+                  email: sessionData?.user?.email as string,
                 },
-              }
-            );
-          }}
-        >
-          + Create New Board
-        </button>
+                {
+                  onSuccess: (data) => {
+                    setBoards([...boards, data]);
+                  },
+                }
+              );
+            }}
+          >
+            + Create New Board
+          </button>
+        </div>
       </div>
-    </div>
+    </Layout>
   );
 };
 

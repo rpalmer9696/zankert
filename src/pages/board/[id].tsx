@@ -6,6 +6,7 @@ import Header from "@/components/Header";
 import { useEffect, useState } from "react";
 import ListCard from "@/components/ListCard";
 import Link from "next/link";
+import Layout from "../layout";
 
 type List = {
   name: string;
@@ -51,65 +52,67 @@ const Board = () => {
   );
 
   return (
-    <div className="flex flex-col p-4">
-      <Header />
-      <div className="p-2"></div>
-      <Link
-        href="/boards"
-        className="w-min whitespace-nowrap rounded bg-white/20 p-2 text-xl text-white hover:bg-white/30"
-      >
-        {"< Back to Boards"}
-      </Link>
-      <div className="p-2"></div>
-      <input
-        className="w-full text-ellipsis whitespace-nowrap rounded bg-transparent p-2 text-3xl text-white hover:bg-white/30"
-        value={boardName}
-        onChange={(e) => setBoardName(e.target.value)}
-        onKeyDown={(e) => {
-          if (e.code !== "Enter") return;
-          (e.target as HTMLInputElement).blur();
-          updateBoard.mutate({
-            id: id as string,
-            name: boardName,
-          });
-        }}
-      />
-      <div className="p-2"></div>
-      <div className="flex flex-row overflow-x-auto pb-4">
-        {lists.map((item, index) => {
-          return (
-            <ListCard
-              key={index}
-              name={item.name}
-              id={item.id}
-              lists={lists}
-              updateListId={updatedListId}
-              refreshLists={(toList: string) => {
-                setUpdatedListId(toList);
-              }}
-            />
-          );
-        })}
-        <button
-          className="h-24 min-w-[20rem] cursor-pointer rounded bg-white/20 py-8 text-2xl text-white hover:bg-white/40"
-          onClick={() => {
-            addList.mutate(
-              {
-                name: "New List",
-                board_id: id as string,
-              },
-              {
-                onSuccess: (data) => {
-                  setLists([...lists, data]);
-                },
-              }
-            );
-          }}
+    <Layout>
+      <div className="flex flex-col p-4">
+        <Header />
+        <div className="p-2"></div>
+        <Link
+          href="/boards"
+          className="w-min whitespace-nowrap rounded bg-white/20 p-2 text-xl text-white hover:bg-white/30"
         >
-          + Create New List
-        </button>
+          {"< Back to Boards"}
+        </Link>
+        <div className="p-2"></div>
+        <input
+          className="w-full text-ellipsis whitespace-nowrap rounded bg-transparent p-2 text-3xl text-white hover:bg-white/30"
+          value={boardName}
+          onChange={(e) => setBoardName(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.code !== "Enter") return;
+            (e.target as HTMLInputElement).blur();
+            updateBoard.mutate({
+              id: id as string,
+              name: boardName,
+            });
+          }}
+        />
+        <div className="p-2"></div>
+        <div className="flex flex-row overflow-x-auto pb-4">
+          {lists.map((item, index) => {
+            return (
+              <ListCard
+                key={index}
+                name={item.name}
+                id={item.id}
+                lists={lists}
+                updateListId={updatedListId}
+                refreshLists={(toList: string) => {
+                  setUpdatedListId(toList);
+                }}
+              />
+            );
+          })}
+          <button
+            className="h-24 min-w-[20rem] cursor-pointer rounded bg-white/20 py-8 text-2xl text-white hover:bg-white/40"
+            onClick={() => {
+              addList.mutate(
+                {
+                  name: "New List",
+                  board_id: id as string,
+                },
+                {
+                  onSuccess: (data) => {
+                    setLists([...lists, data]);
+                  },
+                }
+              );
+            }}
+          >
+            + Create New List
+          </button>
+        </div>
       </div>
-    </div>
+    </Layout>
   );
 };
 
